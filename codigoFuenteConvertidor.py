@@ -10,7 +10,7 @@ def main(page: ft.Page):
             origen = cbo_origen.value
             destino = cbo_destino.value
 
-            # Si el número es decimal (con punto flotante)
+            # Si el número es decimal (con punto decimal)
             if "." in numero:
                 if origen != "Decimal":
                     resultado.value = "Error: Solo se soporta punto flotante para el sistema Decimal"
@@ -34,11 +34,11 @@ def main(page: ft.Page):
             if origen == destino:
                 resultado.value = f"Resultado: {numero}"
             else:
-                # Convertir del decimal al sistema deseado
+                # Convertir del decimal al sistema requerido
                 if destino == "Decimal":
                     resultado.value = f"Resultado: {decimal}"
                 elif destino == "Binario":
-                    if "." in str(decimal):  # Manejo de punto flotante
+                    if "." in str(decimal):  # Manejo de punto decimal
                         parte_entera = int(decimal)
                         parte_fraccionaria = decimal - parte_entera
                         bin_entero = bin(parte_entera)[2:]
