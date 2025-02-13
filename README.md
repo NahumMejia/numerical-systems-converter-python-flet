@@ -27,3 +27,9 @@ A simple python application for converting numerical systems (binary, octal, dec
 2. Select the source numerical system (e.g., Decimal, Binary).
 3. Select the target numerical system (e.g., Hexadecimal).
 4. Click on the "Convert" button to view the result.
+
+## ScreenShots
+![prj-cvs-1](/images/prj-cvs-1.png "prj-cvs-1")
+![prj-cvs-2](/images/prj-cvs-2png "prj-cvs-1")
+![prj-cvs-3](/images/prj-cvs-3.png "prj-cvs-2")
+![prj-cvs-4](/images/prj-cvs-4.png "prj-cvs-3")
