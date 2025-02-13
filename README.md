@@ -30,6 +30,6 @@ A simple python application for converting numerical systems (binary, octal, dec
 
 ## ScreenShots
 ![prj-cvs-1](/images/prj-cvs-1.png "prj-cvs-1")
-![prj-cvs-2](/images/prj-cvs-2png "prj-cvs-1")
+![prj-cvs-2](/images/prj-cvs-2.png "prj-cvs-1")
 ![prj-cvs-3](/images/prj-cvs-3.png "prj-cvs-2")
 ![prj-cvs-4](/images/prj-cvs-4.png "prj-cvs-3")
