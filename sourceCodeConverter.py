@@ -1,89 +1,91 @@
 import flet as ft
 
-
 def main(page: ft.Page):
-    # Function to perform the conversion
+    # Función para realizar la conversión
     def convert(e):
         try:
-            # Get values from the input and dropdowns
+            # Obtener valores de entrada y selección
             number = txt_number.value.strip()
             source = cbo_source.value
             target = cbo_target.value
 
-            # If the number is decimal (with a decimal point)
-            if "." in number:
-                if source != "Decimal":
-                    result.value = "Error: Only floating point numbers are supported for the Decimal system"
-                    result.update()
-                    return
-                decimal = float(number)
-            else:
-                # Convert the number to the decimal system first
-                if source == "Decimal":
-                    decimal = int(number)
-                elif source == "Binary":
-                    decimal = int(number, 2)
-                elif source == "Octal":
-                    decimal = int(number, 8)
-                elif source == "Hexadecimal":
-                    decimal = int(number, 16)
+            # Validar si el número tiene parte decimal
+            if source == "Binary":
+                if "." in number:
+                    integer_part, fractional_part = number.split(".")
+                    decimal_integer = int(integer_part, 2)
+                    decimal_fraction = binary_fraction_to_decimal(fractional_part)
+                    decimal = decimal_integer + decimal_fraction
                 else:
-                    raise ValueError("Invalid source system")
-
-            # If the source and target are the same
-            if source == target:
-                result.value = f"Result: {number}"
+                    decimal = int(number, 2)
+            elif source == "Decimal":
+                decimal = float(number)
+            elif source == "Octal":
+                decimal = int(number, 8)
+            elif source == "Hexadecimal":
+                decimal = int(number, 16)
             else:
-                # Convert from decimal to the required system
+                raise ValueError("Sistema de origen inválido")
+
+            # Si el sistema de origen y destino son iguales
+            if source == target:
+                result.value = f"Resultado: {number}"
+            else:
+                # Convertir al sistema requerido
                 if target == "Decimal":
-                    result.value = f"Result: {decimal}"
+                    result.value = f"Resultado: {decimal}"
                 elif target == "Binary":
-                    if "." in str(decimal):  # Handle the decimal point
+                    if isinstance(decimal, float) and not decimal.is_integer():
                         integer_part = int(decimal)
                         fractional_part = decimal - integer_part
                         bin_integer = bin(integer_part)[2:]
                         bin_fractional = convert_fraction_binary(fractional_part)
-                        result.value = f"Result: {bin_integer}.{bin_fractional}"
+                        result.value = f"Resultado: {bin_integer}.{bin_fractional}"
                     else:
-                        result.value = f"Result: {bin(int(decimal))[2:]}"
+                        result.value = f"Resultado: {bin(int(decimal))[2:]}"
                 elif target == "Octal":
-                    result.value = f"Result: {oct(int(decimal))[2:]}"
+                    result.value = f"Resultado: {oct(int(decimal))[2:]}"
                 elif target == "Hexadecimal":
-                    result.value = f"Result: {hex(int(decimal))[2:]}"
+                    result.value = f"Resultado: {hex(int(decimal))[2:]}"
                 else:
-                    raise ValueError("Invalid target system")
+                    raise ValueError("Sistema de destino inválido")
 
         except ValueError:
-            result.value = "Error: Invalid input"
+            result.value = "Error: Entrada inválida"
         except Exception as ex:
             result.value = f"Error: {ex}"
 
         result.update()
 
-    # Function to convert the fractional part of a decimal to binary
+    # Función para convertir la parte fraccionaria de binario a decimal
+    def binary_fraction_to_decimal(fraction):
+        decimal = 0
+        for i, digit in enumerate(fraction):
+            decimal += int(digit) * (2 ** -(i + 1))
+        return decimal
+
+    # Función para convertir la parte fraccionaria de decimal a binario
     def convert_fraction_binary(fraction):
         binary = ""
         for _ in range(10):
             fraction *= 2
-            if fraction >= 1:
-                binary += "1"
-                fraction -= 1
-            else:
-                binary += "0"
+            bit = int(fraction)
+            binary += str(bit)
+            fraction -= bit
             if fraction == 0:
                 break
         return binary
 
-    # Page setup
-    page.title = "Number System Converter"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER  # Center vertically
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER  # Center horizontally
+    # Configuración de la página
+    page.title = "Conversor de Sistemas Numéricos"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.padding = 20
 
-    # Interface elements
-    txt_number = ft.TextField(label="Number to convert", width=300)
+    # Elementos de la interfaz
+    txt_number = ft.TextField(label="Número a convertir", width=300)
     cbo_source = ft.Dropdown(
-        label="Source system",
+        label="Sistema de origen",
         options=[
             ft.dropdown.Option("Decimal"),
             ft.dropdown.Option("Binary"),
@@ -94,7 +96,7 @@ def main(page: ft.Page):
         width=300,
     )
     cbo_target = ft.Dropdown(
-        label="System to convert to",
+        label="Sistema de destino",
         options=[
             ft.dropdown.Option("Decimal"),
             ft.dropdown.Option("Binary"),
@@ -104,14 +106,14 @@ def main(page: ft.Page):
         value="Binary",
         width=300,
     )
-    btn_convert = ft.ElevatedButton("Convert", on_click=convert)
-    result = ft.Text("Result:", size=18)
+    btn_convert = ft.ElevatedButton("Convertir", on_click=convert)
+    result = ft.Text("Resultado:", size=18)
 
-    # Add elements to the page
+    # Agregar elementos a la página
     page.add(
         ft.Column(
             [
-                ft.Text("Number System Converter", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("Conversor de Sistemas Numéricos", size=24, weight=ft.FontWeight.BOLD),
                 txt_number,
                 cbo_source,
                 cbo_target,
@@ -124,6 +126,5 @@ def main(page: ft.Page):
         )
     )
 
-
-# Run the application
+# Ejecutar la aplicación
 ft.app(target=main)
